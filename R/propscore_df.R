@@ -57,7 +57,7 @@ propscore_df = function(
   for (col_i in cov_cols){
     col_i_vec = df[[col_i]]
     if(any(is.na(col_i_vec))){
-      warning(
+      message(
         sprintf("There are %g NA values in the %s column. These rows will be lost.",
                 sum(is.na(col_i_vec)), col_i)
       )
@@ -80,7 +80,8 @@ propscore_df = function(
   }
 
   ## Need to actually lose the NAs (but only from cov_cols or arm_col)
-
+  ## Ungroup is because my dataset was previously grouped by one of the ID variables.
+  ## Hopefully testing with another dataset will show if this causes a problem
   df_cols = df |> ungroup() |> select(all_of(c(cov_cols, arm_col)))
   any_NA = apply(df_cols, 1, anyNA)
 
@@ -128,13 +129,50 @@ propscore_df = function(
         ratio = px_int / px_comp
       )
 
-
+    df_out = props_both
   } else if (tolower(cov_dist) == "marginal") {
+    ## Do this by covariate
+    df_marg_list = list()
+    for (cov_i in cov_cols){
+      df_i_marg = df |>
+        group_by(pick(cov_i)) |>
+        summarise(
+          comb_int = sum(Arm == "Intervention"),
+          comb_comp = sum(Arm == "Comparison"),
+          prop_int = comb_int / n_int,
+          prop_comp = comb_comp / n_comp
+        ) |>
+        select(all_of(c(cov_i, "prop_int", "prop_comp")))
+      names(df_i_marg) = c(cov_i, sprintf("p_int_%s", cov_i), sprintf("p_comp_%s", cov_i))
+      df_marg_list[[cov_i]] = df_i_marg
+    }
+    ## This is probably quite ugly but it works
+    inner_text = paste(sprintf("levels(df$%s)", cov_cols), collapse = ", ")
+    full_text = paste0("df_probs_marg = expand.grid(", inner_text, ")")
+    eval(parse(text = full_text))
+    names(df_probs_marg) = cov_cols
+    df_out = df_probs_marg
+
+    for (cov_i in cov_cols){
+      df_out = left_join(df_out, df_marg_list[[cov_i]], by=cov_i)
+    }
+    ## Now we need to multiply all the rows starting 'p_int' and all the rows starting 'p_comp'
+
+    p_int_df = df_out |>
+      select(starts_with("p_int"))
+    df_out$p_int = apply(p_int_df, 1, prod)
+
+    p_comp_df = df_out |>
+      select(starts_with("p_comp"))
+    df_out$p_comp = apply(p_comp_df, 1, prod)
+
+    ## Find ratio
+    df_out$ratio = df_out$p_int / df_out$p_comp
 
   } else {
     ## Check it is a list of vectors that (unlisted and reordered) is exactly cov_cols
   }
 
-  props_both
+  df_out
 
 }

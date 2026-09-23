@@ -12,6 +12,18 @@ propscore_df(
 
 propscore_df(
   df = eg_data,
+  cov_cols = c("risk_ass", "category"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = "marginal",
+  pz1 = "rescacle",
+  pz1_n = 1
+)
+
+## Should give an error because of victim_age being numerical
+
+propscore_df(
+  df = eg_data,
   cov_cols = c("risk_ass", "category", "victim_age"),
   arm_col = "Arm",
   intervention_level = "Intervention",
@@ -19,3 +31,10 @@ propscore_df(
   pz1 = "rescacle",
   pz1_n = 1
 )
+
+## Next steps
+# Add in more of the WY covariates so I can test it with more than two
+# Get to data frame with ratio in for other methods (sub-joint)
+# code up the pz1 methods (should this have a separate function?)
+
+## Find some datasets in R for observational studies, to test with also
