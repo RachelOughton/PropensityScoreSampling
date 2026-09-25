@@ -25,69 +25,12 @@ propscore_df = function(
     cov_dist_fn,
     pz1_fn
 ){
-  # Check the names exist
-  # Check the variables are factor variables
-
-  arm_levels = unlist(unique(df[ ,names(df) == arm_col]))
-  if(length(arm_levels)!=2){
-    stop(
-      sprintf("The arm_col variable %s should have two unique values, but yours has %g: %s" ,
-              arm_col, length(arm_levels), paste(arm_levels, collapse=", " ))
-    )
-  }
-  if(!any(arm_levels == intervention_level)){
-    stop(
-      sprintf("One of the values in the column %s that you have supplied as arm_col should be %s",
-              arm_col, intervention_level)
-    )
-  }
-  comparison_level = arm_levels[arm_levels!=intervention_level]
-  ## Create the correspondence between my default labels and theirs
-  df$arm_given = df[ ,names(df) == arm_col]
-  df$Arm = NA
-  df$Arm[df$arm_given == intervention_level] = "Intervention"
-  df$Arm[df$arm_given != intervention_level] = "Comparison"
-
-  ## Check everything for covariates in cov_cols.
-  ## Are they factor variables?
-  ## Should I check for missing data?
-
-  n_covcols = length(cov_cols)
-
-  for (col_i in cov_cols){
-    col_i_vec = df[[col_i]]
-    if(any(is.na(col_i_vec))){
-      message(
-        sprintf("There are %g NA values in the %s column. These rows will be lost.",
-                sum(is.na(col_i_vec)), col_i)
-      )
-    }
-    ## Check that it is factor (or could be treated as such)
-    if(!is.factor(col_i_vec)){
-      if(is.character(col_i_vec)){
-        col_i_fac = as.factor(col_i_vec)
-        warning(
-          sprintf("Column %s has been coerced to a factor with %g levels",
-                  col_i, nlevels(col_i_fac))
-        )
-      } else {
-        stop(
-          sprintf("Covariates should be factors, but %s is %s",
-                  col_i, class(col_i_vec))
-        )
-      }
-   }
-  }
-
-  ## Need to actually lose the NAs (but only from cov_cols or arm_col)
-  ## Ungroup is because my dataset was previously grouped by one of the ID variables.
-  ## Hopefully testing with another dataset will show if this causes a problem
-  df_cols = df |> dplyr::ungroup() |> dplyr::select(tidyselect::all_of(c(cov_cols, arm_col)))
-  any_NA = apply(df_cols, 1, anyNA)
-
-  df = df[!any_NA, ]
-
-
+  df = pss_check_data(
+    df = df,
+    cov_cols = cov_cols,
+    arm_col = arm_col,
+    intervention_level = intervention_level
+  )
   # Getting to data frame with ratios
   ## Using closures
 
@@ -102,7 +45,6 @@ propscore_df = function(
   pz1_fun = pz1_fn
   pz1 = pz1_fun(df_out)
   df_out$PropScore = pz1*df_out$ratio
-
 
   df_out
 

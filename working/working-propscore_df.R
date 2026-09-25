@@ -18,8 +18,7 @@ propscore_df(
   arm_col = "Arm",
   intervention_level = "Intervention",
   cov_dist = props_marg_fn(),
-  pz1 = "rescacle",
-  pz1_n = 1
+  pz1_fn = pz1_expectedN(100)
 )
 
 ## Should give an error because of victim_age being numerical
