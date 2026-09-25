@@ -1,21 +1,23 @@
 load("data/eg_data.rda")
-propscore_df(
-  df = eg_data,
-  cov_cols = c("risk_ass", "category"),
-  arm_col = "Arm",
-  intervention_level = "Intervention",
-  cov_dist = "joint",
-  pz1 = "rescacle",
-  pz1_n = 1
-  )
 
+
+## Using closure approach
 
 propscore_df(
   df = eg_data,
-  cov_cols = c("risk_ass", "category"),
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = "marginal",
+  cov_dist = props_joint_fn(),
+  pz1_fn = pz1_estimate(1)
+)
+
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = props_marg_fn(),
   pz1 = "rescacle",
   pz1_n = 1
 )

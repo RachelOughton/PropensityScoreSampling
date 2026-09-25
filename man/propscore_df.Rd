@@ -2,9 +2,24 @@
 % Please edit documentation in R/propscore_df.R
 \name{propscore_df}
 \alias{propscore_df}
-\title{Generate data frame of propensity score estimates to be used in sampling}
+\alias{props_joint_fn}
+\alias{props_marg_fn}
+\alias{pz1_estimate}
+\alias{pz1_rescale}
+\alias{pz1_expectedN}
+\title{Propensity score data frame}
 \usage{
-propscore_df(df, cov_cols, arm_col, intervention_level, cov_dist)
+propscore_df(df, cov_cols, arm_col, intervention_level, cov_dist_fn, pz1_fn)
+
+props_joint_fn()
+
+props_marg_fn()
+
+pz1_estimate(n_pz1)
+
+pz1_rescale(n_pz1)
+
+pz1_expectedN(n_pz1)
 }
 \arguments{
 \item{df}{A data frame containing treatment group and comparison cohort data}
@@ -15,19 +30,38 @@ propscore_df(df, cov_cols, arm_col, intervention_level, cov_dist)
 
 \item{intervention_level}{The value in the \code{arm_col} for the treatment cases}
 
-\item{cov_dist}{Should be either "joint" for fully joint distribution, "marginal" for fully marginal distribution, or a list of character vectors containing each element of \code{cov_col} exactly once, showing which covariates should be treated jointly.}
+\item{cov_dist_fn}{One of the cov_dist functions: \code{joint_covdist()} for fully joint distribution, \code{marginal_covdist()} for marginal distribution. If you want to treat some subset(s) of covariates jointly, use \code{marginal_covdist(cov_list)}, where \code{cov_list} is a list of character vectors containing the covariates that should be treated jointly.}
 
-\item{pz1}{The method used to specify p(Z=1). Should be one of "rescale", "estimate" or "expectedN"}
+\item{pz1_fn}{One of the functions used to specify p(Z=1): \code{pz1_rescale()}, \code{pz1_estimate()} or \code{pz1_expectedN()}. Each of these has one numerical argument, \code{n_pz1}, whose meaning depends on the function being used.}
 
-\item{pz1_n}{A number relating to \code{pz1}. If \code{pz1} == "rescale", \code{pz1_n} is the number to rescale to. If \code{pz1} == "estimate", \code{pz1_n} is the estimate of p(Z=1) to be used. If \code{pz1} == "expectedN", \code{pz1_n} is the expected size of the comparison cohort to be aimed for.}
+\item{n_pz1}{An argument to \code{pz1_fn}. Its meaning depends on the function used for \code{pz1_fn}.}
 }
 \value{
-A data frame (more detail here!).
+\code{propscore_df} returns a data frame (more detail here!).
+
+\code{props_joint_fn} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the fully joint approach.
+
+\code{props_marg_fn} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the marginal approach.
+
+\code{pz1_estimate} returns the estimate of p(Z=1) using the 'estimate' method (eg. a value provided by an expert). The argument is used as the estimate.
+
+\code{pz1_rescale} finds the value of p(Z=1) such that the largest propensity score will be \code{n_pz1} (the argument given to \code{pz1_fn})
+
+\code{pz1_expectedN} finds the value of p(Z=1) such that the expected size of the matched comparison group will be \code{n_pz1} (the argument to \code{pz1_fn}).
 }
 \description{
 Generate data frame of propensity score estimates to be used in sampling
 }
-\examples{
-x <- "alfa,bravo,charlie,delta"
-strsplit1(x, split = ",")
-}
+\section{Functions}{
+\itemize{
+\item \code{props_joint_fn()}: Find table of estimates of p(x), p(x|Z=1) and their ratio using fully joint approach
+
+\item \code{props_marg_fn()}: Find table of estimates of p(x), p(x|Z=1) and their ratio using marginal approach
+
+\item \code{pz1_estimate()}: Specify p(Z=1) using the estimate method. The argument given is the estimate used
+
+\item \code{pz1_rescale()}: Specify p(Z=1) using the rescale method. The argument given is the value the largest estimated propensity score should take
+
+\item \code{pz1_expectedN()}: Specify p(Z=1) using the expectedN method. The argument given should be the expected size of the matched comparison group
+
+}}
