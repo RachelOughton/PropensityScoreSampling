@@ -1,9 +1,9 @@
 Package: PropensityScoreSampling
-Title: What the Package Does (One Line, Title Case)
+Title: Propensity Score Sampling for quasi-experimental studies with an external comparison group. 
 Version: 0.0.0.9000
 Authors@R: 
     person("Rachel", "Oughton", , "r.h.oughton@durham.ac.uk", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: IN DEVELOPMENT! Propensity score sampling is a method for finding a matched comparison group in a quasi-experimental study where an 'external' comparison cohort is being used. By 'external', we mean a cohort for which the intervention is not available to anyone (for example, a different time or region from the treatment group).  
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
