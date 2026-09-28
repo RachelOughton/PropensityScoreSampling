@@ -1,5 +1,5 @@
 Package: PropensityScoreSampling
-Title: Propensity Score Sampling for quasi-experimental studies with an external comparison group. 
+Title: Propensity Score Sampling for quasi-experimental studies with an external comparison group
 Version: 0.0.0.9000
 Authors@R: 
     person("Rachel", "Oughton", , "r.h.oughton@durham.ac.uk", role = c("aut", "cre"))
