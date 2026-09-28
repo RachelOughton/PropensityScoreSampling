@@ -7,7 +7,7 @@
 #' @param cov_cols A vector of strings, the column names of the covariates to be matched on. These should all be factor / categorical data.
 #' @param arm_col The name of the column indicating which rows are treated cases and which are comparison cases. These should be factor or character, with only two levels / options.
 #' @param intervention_level The value in the `arm_col` for the treatment cases
-#' @param replace logial. Should the comparison cases be sampled with replacement?
+#' @param replace logical. Should the comparison cases be sampled with replacement?
 #' @param downsample logical. Should the treatment cases be downsampled when there aren't enough comparison cases? Only one of `replace` and `downsample` should be TRUE.
 
 #'

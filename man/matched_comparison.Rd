@@ -25,7 +25,7 @@ matched_comparison(
 
 \item{intervention_level}{The value in the \code{arm_col} for the treatment cases}
 
-\item{replace}{logial. Should the comparison cases be sampled with replacement?}
+\item{replace}{logical. Should the comparison cases be sampled with replacement?}
 
 \item{downsample}{logical. Should the treatment cases be downsampled when there aren't enough comparison cases? Only one of \code{replace} and \code{downsample} should be TRUE.}
 }
