@@ -13,7 +13,23 @@
 #' @return `propscore_df` returns a data frame (more detail here!).
 #' @export
 #'
-# @examples
+#' @examples
+#' propscore_df(
+#'   df = eg_data,
+#'   cov_cols = c("risk_ass", "category", "sus_age_bin"),
+#'   arm_col = "Arm",
+#'   intervention_level = "Intervention",
+#'   cov_dist = props_joint_fn(),
+#'   pz1_fn = pz1_rescale(1)
+#'   )
+#' propscore_df(
+#'   df = eg_data,
+#'   cov_cols = c("risk_ass", "category", "sus_age_bin"),
+#'   arm_col = "Arm",
+#'   intervention_level = "Intervention",
+#'   cov_dist = props_marg_fn(),
+#'   pz1_fn = pz1_expectedN(300)
+#'   )
 #' @importFrom rlang .data
 
 

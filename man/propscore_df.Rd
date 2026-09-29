@@ -65,3 +65,21 @@ Generate data frame of propensity score estimates to be used in sampling
 \item \code{pz1_expectedN()}: Specify p(Z=1) using the expectedN method. The argument given should be the expected size of the matched comparison group
 
 }}
+\examples{
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = props_joint_fn(),
+  pz1_fn = pz1_rescale(1)
+  )
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = props_marg_fn(),
+  pz1_fn = pz1_expectedN(300)
+  )
+}
