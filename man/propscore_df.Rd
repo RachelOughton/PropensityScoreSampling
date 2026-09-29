@@ -66,6 +66,9 @@ Generate data frame of propensity score estimates to be used in sampling
 
 }}
 \examples{
+# Creates a propensity score data frame from `eg_data`
+# using the joint approach, and rescaling so that the
+# highest propensity score is 1.
 propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
@@ -74,6 +77,11 @@ propscore_df(
   cov_dist = props_joint_fn(),
   pz1_fn = pz1_rescale(1)
   )
+
+  # Creates a propensity score data frame from `eg_data`
+  # using the fully marginal approach, and setting p(Z=1)
+  # so that the expected size of the matched comparison
+  # group will be 300
 propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
