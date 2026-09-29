@@ -25,12 +25,11 @@ propscore_df(
 
 propscore_df(
   df = eg_data,
-  cov_cols = c("risk_ass", "category", "victim_age"),
+  cov_cols = c("risk_ass", "category", "suspect_age"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = "joint",
-  pz1 = "rescacle",
-  pz1_n = 1
+  cov_dist = props_joint_fn(),
+  pz1_fn = pz1_estimate(1)
 )
 
 ## Next steps

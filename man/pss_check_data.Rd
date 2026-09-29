@@ -28,3 +28,11 @@ The function does the following:
 \item Removes rows for which any of \code{cov_cols} or \code{arm_col} is missing.
 }
 }
+\examples{
+pss_check_data(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention"
+)
+}

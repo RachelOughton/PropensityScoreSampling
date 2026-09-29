@@ -15,7 +15,13 @@
 #' @return `pss_check_data` returns a (possibly slightly tidied up) data frame or an error message. The data frame will have an `Arm` column with levels `Intervention` and `Comparison`.
 #' @export
 #'
-# @examples
+#' @examples
+#' pss_check_data(
+#'   df = eg_data,
+#'   cov_cols = c("risk_ass", "category", "sus_age_bin"),
+#'   arm_col = "Arm",
+#'   intervention_level = "Intervention"
+#' )
 #' @importFrom rlang .data
 
 pss_check_data = function(
@@ -25,6 +31,20 @@ pss_check_data = function(
     intervention_level
 ){
   # Check the names exist
+
+  if(!(any(names(df)==arm_col))){
+    stop(
+      sprintf("There is no column named %s", arm_col)
+    )
+  }
+
+  if(sum(cov_cols %in% names(df)) != length(cov_cols)){
+    stop(
+      sprintf("The following cov_col elements are missing from df: %s",
+              paste(cov_cols[!(cov_cols %in% names(df))] ,collapse = ","))
+    )
+  }
+
   # Check the variables are factor variables
 
   arm_levels = unlist(unique(df[ ,names(df) == arm_col]))
@@ -36,8 +56,8 @@ pss_check_data = function(
   }
   if(!any(arm_levels == intervention_level)){
     stop(
-      sprintf("One of the values in the column %s that you have supplied as arm_col should be %s",
-              arm_col, intervention_level)
+      sprintf("You have given %s as the intervention level of the column %s, but the levels in the data are %s",
+              intervention_level, arm_col, paste(arm_levels, collapse = ", "))
     )
   }
   comparison_level = arm_levels[arm_levels!=intervention_level]
