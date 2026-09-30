@@ -36,7 +36,7 @@ pz1_expectedN(n_pz1)
 \item{n_pz1}{An argument to \code{pz1_fn}. Its meaning depends on the function used for \code{pz1_fn}.}
 }
 \value{
-\code{propscore_df} returns a data frame (more detail here!).
+\code{propscore_df} returns a data frame (more detail here, including the columns!).
 
 \code{props_fun} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the approach specified via \code{cov_dist}.
 

@@ -3,7 +3,7 @@ load("data/eg_data.rda")
 
 ## After merging functions into props_fun
 
-propscore_df(
+eg_j_est1 = propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
@@ -12,16 +12,16 @@ propscore_df(
   pz1_fn = pz1_estimate(1)
 )
 
-propscore_df(
+eg_m_resc15 = propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
   cov_dist = "marginal",
-  pz1_fn = pz1_expectedN(100)
+  pz1_fn = pz1_rescale(1.5)
 )
 
-propscore_df(
+eg_mix_exp100 = propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",

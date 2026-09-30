@@ -11,7 +11,7 @@
 #' @param n_pz1 An argument to `pz1_fn`. Its meaning depends on the function used for `pz1_fn`.
 #' @param cov_list An argument to `props_fun`. This should be a list of character vectors. The elements of the list determine which groups of covariates are treated jointly. If `cov_dist` is "marginal" or "joint" then this is created automatically from `cov_cols`. If `cov_dist` is a list of groups of covariates to be treated jointly then the covariates to be treated marginally are filled in automatically.
 #'
-#' @return `propscore_df` returns a data frame (more detail here!).
+#' @return `propscore_df` returns a data frame (more detail here, including the columns!).
 #' @export
 #'
 #' @examples

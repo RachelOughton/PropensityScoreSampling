@@ -10,8 +10,10 @@ matched_comparison(
   cov_cols,
   arm_col,
   intervention_level,
+  seed,
   replace = T,
-  downsample = F
+  downsample = F,
+  drop_int = F
 )
 }
 \arguments{
@@ -25,13 +27,54 @@ matched_comparison(
 
 \item{intervention_level}{The value in the \code{arm_col} for the treatment cases}
 
+\item{seed}{The random seed to be used, for reproducibility}
+
 \item{replace}{logical. Should the comparison cases be sampled with replacement?}
 
 \item{downsample}{logical. Should the treatment cases be downsampled when there aren't enough comparison cases? Only one of \code{replace} and \code{downsample} should be TRUE.}
+
+\item{drop_int}{logical. Should cases in the intervention/treated group be dropped if there are no equivalent cases in the comparison cohort to sample from?}
 }
 \value{
-\code{matched_comparison} returns a data frame containing the (candidate) matched treatment and comparison groups.
+\code{matched_comparison} returns a data frame that is an expanded form of \code{df}, with the same number of rows, in the same order, but some extra columns:
+\itemize{
+\item \code{PropScore}: the propensity score for that row, from \code{propscore_df}
+\item \code{include}: how many copies of this row are included in the matched dataset. Zero means the row has been dropped. Values greater than one mean the row will be duplicated.
+\item \code{seed}: the random seed that was used. This will be the same for all rows and is included in the output for reproducibility.
+}
 }
 \description{
 Generate a matched comparison group using the propensity score sampling approach
+}
+\examples{
+
+## First use `propscore_df` to create a propensity score data frame
+## This example uses the joint approach and specifies p(Z=1) such
+## that the expected size of the comparison group is 300
+
+eg_j_exp300 = propscore_df(
+   df = eg_data,
+   cov_cols = c("risk_ass", "category", "sus_age_bin"),
+   arm_col = "Arm",
+   intervention_level = "Intervention",
+   cov_dist = "joint",
+   pz1_fn = pz1_expectedN(300)
+   )
+
+## Now we can use `eg_j_exp300` to find a matched comparison group
+## In this version we sample from the comparison group with replacement
+## and do not drop any intervention cases for which there are no
+## comparison cases to sample
+match_j_exp300_replace = matched_comparison(
+   df = eg_data,
+   propscore_df = eg_j_exp300,
+   cov_cols = c("category", "risk_ass", "sus_age_bin"),
+   arm_col = "Arm",
+   intervention_level = "Intervention",
+   seed = 20,
+   replace = TRUE,
+   downsample = FALSE,
+   drop_int = FALSE
+   )
+
 }
