@@ -21,12 +21,14 @@ expect_error(
   )
 )
 
-expect_snapshot(
-  pss_check_data(
-    df = eg_data,
-    cov_cols = c("risk_ass", "category", "sus_age_bin"),
-    arm_col = "Arm",
-    intervention_level = "Intervention"
-  )
-)
+test_that("my output looks right", {
+  expect_snapshot(
+    pss_check_data(
+      df = eg_data,
+      cov_cols = c("risk_ass", "category", "sus_age_bin"),
+      arm_col = "Arm",
+      intervention_level = "Intervention"
+    )
+  )})
+
 
