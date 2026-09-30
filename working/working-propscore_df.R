@@ -1,14 +1,14 @@
 load("data/eg_data.rda")
 
 
-## Using closure approach
+## After merging functions into props_fun
 
 propscore_df(
   df = eg_data,
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = props_joint_fn(),
+  cov_dist = "joint",
   pz1_fn = pz1_estimate(1)
 )
 
@@ -17,7 +17,28 @@ propscore_df(
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = props_marg_fn(),
+  cov_dist = "marginal",
+  pz1_fn = pz1_expectedN(100)
+)
+
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = list(c("risk_ass", "category")),
+  pz1_fn = pz1_expectedN(100)
+)
+
+## Checking mixed covdist function - need to do some that make errors, and
+## some with more combinations of variables (and higher orders of combinations)
+
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = mixed_covdist(list(c("risk_ass", "category"))),
   pz1_fn = pz1_expectedN(100)
 )
 
@@ -28,7 +49,7 @@ propscore_df(
   cov_cols = c("risk_ass", "category", "suspect_age"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = props_joint_fn(),
+  cov_dist = joint_covdist(),
   pz1_fn = pz1_estimate(1)
 )
 
@@ -38,3 +59,4 @@ propscore_df(
 # code up the pz1 methods (should this have a separate function?)
 
 ## Find some datasets in R for observational studies, to test with also
+

@@ -2,18 +2,15 @@
 % Please edit documentation in R/propscore_df.R
 \name{propscore_df}
 \alias{propscore_df}
-\alias{props_joint_fn}
-\alias{props_marg_fn}
+\alias{props_fun}
 \alias{pz1_estimate}
 \alias{pz1_rescale}
 \alias{pz1_expectedN}
 \title{Propensity score data frame}
 \usage{
-propscore_df(df, cov_cols, arm_col, intervention_level, cov_dist_fn, pz1_fn)
+propscore_df(df, cov_cols, arm_col, intervention_level, cov_dist, pz1_fn)
 
-props_joint_fn()
-
-props_marg_fn()
+props_fun(df, cov_cols, cov_list)
 
 pz1_estimate(n_pz1)
 
@@ -30,18 +27,18 @@ pz1_expectedN(n_pz1)
 
 \item{intervention_level}{The value in the \code{arm_col} for the treatment cases}
 
-\item{cov_dist_fn}{One of the cov_dist functions: \code{joint_covdist()} for fully joint distribution, \code{marginal_covdist()} for marginal distribution. If you want to treat some subset(s) of covariates jointly, use \code{marginal_covdist(cov_list)}, where \code{cov_list} is a list of character vectors containing the covariates that should be treated jointly.}
+\item{cov_dist}{Either "joint" for fully joint distribution, "marginal" for fully marginal distribution, or a list of of character vectors indicating groups of covariates that should be considered jointly.}
 
 \item{pz1_fn}{One of the functions used to specify p(Z=1): \code{pz1_rescale()}, \code{pz1_estimate()} or \code{pz1_expectedN()}. Each of these has one numerical argument, \code{n_pz1}, whose meaning depends on the function being used.}
+
+\item{cov_list}{An argument to \code{props_fun}. This should be a list of character vectors. The elements of the list determine which groups of covariates are treated jointly. If \code{cov_dist} is "marginal" or "joint" then this is created automatically from \code{cov_cols}. If \code{cov_dist} is a list of groups of covariates to be treated jointly then the covariates to be treated marginally are filled in automatically.}
 
 \item{n_pz1}{An argument to \code{pz1_fn}. Its meaning depends on the function used for \code{pz1_fn}.}
 }
 \value{
 \code{propscore_df} returns a data frame (more detail here!).
 
-\code{props_joint_fn} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the fully joint approach.
-
-\code{props_marg_fn} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the marginal approach.
+\code{props_fun} returns a function that creates a data frame containing \code{px_int} (p(x|Z=1)), \code{px_comp} (p(x) and \code{ratio} (\code{px_int / px_comp}) for every combination of the levels of the covariates in \code{cov_cols}, using the approach specified via \code{cov_dist}.
 
 \code{pz1_estimate} returns the estimate of p(Z=1) using the 'estimate' method (eg. a value provided by an expert). The argument is used as the estimate.
 
@@ -54,9 +51,7 @@ Generate data frame of propensity score estimates to be used in sampling
 }
 \section{Functions}{
 \itemize{
-\item \code{props_joint_fn()}: Find table of estimates of p(x), p(x|Z=1) and their ratio using fully joint approach
-
-\item \code{props_marg_fn()}: Find table of estimates of p(x), p(x|Z=1) and their ratio using marginal approach
+\item \code{props_fun()}: Find table of estimates of p(x), p(x|Z=1) and their ratio using fully joint approach
 
 \item \code{pz1_estimate()}: Specify p(Z=1) using the estimate method. The argument given is the estimate used
 
@@ -74,7 +69,7 @@ propscore_df(
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = props_joint_fn(),
+  cov_dist = "joint",
   pz1_fn = pz1_rescale(1)
   )
 
@@ -87,7 +82,21 @@ propscore_df(
   cov_cols = c("risk_ass", "category", "sus_age_bin"),
   arm_col = "Arm",
   intervention_level = "Intervention",
-  cov_dist = props_marg_fn(),
+  cov_dist = "marginal",
+  pz1_fn = pz1_expectedN(300)
+  )
+
+  # Creates a propensity score data frame from `eg_data`
+  # for which "risk_ass" and "category" are considered
+  # jointly and "sus_age_bin" marginally, and setting p(Z=1)
+  # so that the expected size of the matched comparison
+  # group will be 300
+propscore_df(
+  df = eg_data,
+  cov_cols = c("risk_ass", "category", "sus_age_bin"),
+  arm_col = "Arm",
+  intervention_level = "Intervention",
+  cov_dist = "marginal",
   pz1_fn = pz1_expectedN(300)
   )
 }
