@@ -17,6 +17,7 @@
 #' - `PropScore`: the propensity score for that row, from `propscore_df`
 #' - `include`: how many copies of this row are included in the matched dataset. Zero means the row has been dropped. Values greater than one mean the row will be duplicated.
 #' - `seed`: the random seed that was used. This will be the same for all rows and is included in the output for reproducibility.
+#' @seealso [expand_matched_df()]
 #' @export
 #' @importFrom stats runif
 #'
@@ -66,6 +67,7 @@ matched_comparison = function(
     drop_int = F
 ){
   set.seed(seed)
+  Arm <- include <- NULL
   ## Check this is doing what I want!
   if((replace & downsample)|!(replace | downsample)){
     stop("Exactly one of replace and downsample should be TRUE")
@@ -122,7 +124,20 @@ matched_comparison = function(
         df$include[i] = 1
       }
     }
-
+  ## Create message to say how many cases are being repeated, and how many times
+    df_repeat_summary = df |>
+      dplyr::filter(Arm == "Comparison") |>
+      dplyr::filter(include > 1) |>
+      dplyr::group_by(include) |>
+      dplyr::summarise(n = dplyr::n())
+    if(any(df$include > 1)){
+      for (i in 1:nrow(df_repeat_summary)){
+        message(
+          sprintf("%g comparison cases are being repeated %g times",
+                  df_repeat_summary$n[i], df_repeat_summary$include[i])
+        )
+      }
+    }
   } else if (downsample){
     for (i in 1:nrow(df)){
       arm_i = df[[arm_col]][i]
@@ -142,11 +157,31 @@ matched_comparison = function(
         }
       }
     }
+    n_int_lost = df |>
+      dplyr::filter(Arm == "Intervention") |>
+      dplyr::filter(include == 0) |>
+      nrow()
+    message(
+      sprintf("%g intervention cases have beeen downsampled", n_int_lost)
+    )
   }
 
   if(drop_int){
     ## Drop the intervention cases where there are no comparison cases to sample from
     df$include[is.infinite(df$PropScore)] = 0
+    if(sum(is.infinite(df$PropScore)) > 0){
+      message(
+        sprintf("%g intervention cases have been dropped because there are no comparison cases to sample",
+                sum(is.infinite(df$PropScore)))
+      )
+    }
+  } else {
+    if(sum(is.infinite(df$PropScore)) > 0){
+      message(
+        sprintf("%g intervention cases have been kept even though there are no comparison cases to sample",
+                sum(is.infinite(df$PropScore)))
+      )
+    }
   }
 
   df$seed = seed

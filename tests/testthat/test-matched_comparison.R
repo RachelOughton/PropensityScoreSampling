@@ -66,7 +66,7 @@ test_that("With replacement, not dropping", {
   expect_snapshot(
     matched_comparison(
       df = eg_data,
-      propscore_df = eg_j_est1,
+      propscore_df = eg_mix_exp100,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
       arm_col = "Arm",
       intervention_level = "Intervention",
@@ -75,14 +75,14 @@ test_that("With replacement, not dropping", {
       downsample = F,
       drop_int = F
     )
-  )})
+ )})
 
 
 test_that("With replacement, not dropping", {
   expect_snapshot(
     matched_comparison(
       df = eg_data,
-      propscore_df = eg_j_est1,
+      propscore_df = eg_m_resc15,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
       arm_col = "Arm",
       intervention_level = "Intervention",
@@ -91,21 +91,24 @@ test_that("With replacement, not dropping", {
       downsample = F,
       drop_int = F
     )
-  )})
+ )})
 
-test_that("With replacement, dropping", {
+
+test_that("downsampling, dropping", {
   expect_snapshot(
     matched_comparison(
       df = eg_data,
-      propscore_df = eg_j_est1,
+      propscore_df = eg_m_resc15,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
       arm_col = "Arm",
       intervention_level = "Intervention",
       seed = 20,
-      replace = T,
-      downsample = F,
+      replace = F,
+      downsample = T,
       drop_int = T
     )
-  )})
+    )})
+
+
 
 

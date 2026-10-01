@@ -78,3 +78,6 @@ match_j_exp300_replace = matched_comparison(
    )
 
 }
+\seealso{
+\code{\link[=expand_matched_df]{expand_matched_df()}}
+}
