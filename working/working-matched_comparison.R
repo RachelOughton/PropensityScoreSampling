@@ -27,9 +27,9 @@ eg_mix_exp100 = propscore_df(
   pz1_fn = pz1_expectedN(100)
 )
 
-## Put into matched_comparison
+## Put into matched_sample
 
-match_j_est1_replace = matched_comparison(
+match_j_est1_replace = matched_sample(
   df = eg_data,
   propscore_df = eg_j_est1,
   cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -41,7 +41,7 @@ match_j_est1_replace = matched_comparison(
   drop_int = F
 )
 
-match_m_resc15_down = matched_comparison(
+match_m_resc15_down = matched_sample(
   df = eg_data,
   propscore_df = eg_m_resc15,
   cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -53,7 +53,7 @@ match_m_resc15_down = matched_comparison(
   drop_int = F
 )
 
-match_j_est1_down_di = matched_comparison(
+match_j_est1_down_di = matched_sample(
   df = eg_data,
   propscore_df = eg_j_est1,
   cov_cols = c("category", "risk_ass", "sus_age_bin"),

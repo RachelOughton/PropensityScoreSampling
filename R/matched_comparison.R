@@ -1,7 +1,7 @@
-#' Matched comparison group
+#' Form a matched sample
 #'
-#' Generate a matched comparison group using the propensity score sampling approach
-#' @name matched_comparison
+#' Generate a matched sample using the propensity score sampling approach
+#' @name matched_sample
 #' @param df A data frame containing treatment group and comparison cohort data
 #' @param propscore_df A data frame with a column for each variable in `cov_cols` and a `PropScore` column giving the estimated propensity score for each combination of their levels. This should have been returned by `propscore_df`.
 #' @param cov_cols A vector of strings, the column names of the covariates to be matched on. These should all be factor / categorical data.
@@ -13,10 +13,16 @@
 #' @param drop_int logical. Should cases in the intervention/treated group be dropped if there are no equivalent cases in the comparison cohort to sample from?
 
 #'
-#' @return `matched_comparison` returns a data frame that is an expanded form of `df`, with the same number of rows, in the same order, but some extra columns:
+#' @return [matched_sample()] returns a data frame that is an expanded form of `df`, with the same number of rows, in the same order, but some extra columns:
 #' - `PropScore`: the propensity score for that row, from `propscore_df`
 #' - `include`: how many copies of this row are included in the matched dataset. Zero means the row has been dropped. Values greater than one mean the row will be duplicated.
 #' - `seed`: the random seed that was used. This will be the same for all rows and is included in the output for reproducibility.
+#' [matched_sample()] will also issue messages indicating:
+#'  - How many comparison cases have been repeated (and how many times) if `replace == TRUE`
+#'   - How many intervention cases have been downsampled, if `downsample == TRUE`
+#'   - How many (if any) intervention cases have been dropped because there are no similar comparison cases to sample from, if `drop_int == TRUE`
+#'   - How many (if any) intervention cases have been kept even though there are no similar comparison cases to sample from, if `drop_int == TRUE`
+#'
 #' @seealso [expand_matched_df()]
 #' @export
 #' @importFrom stats runif
@@ -40,7 +46,7 @@
 #' ## In this version we sample from the comparison group with replacement
 #' ## and do not drop any intervention cases for which there are no
 #' ## comparison cases to sample
-#' match_j_exp300_replace = matched_comparison(
+#' match_j_exp300_replace = matched_sample(
 #'    df = eg_data,
 #'    propscore_df = eg_j_exp300,
 #'    cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -55,7 +61,7 @@
 #' @importFrom rlang .data
 #'
 
-matched_comparison = function(
+matched_sample = function(
     df,
     propscore_df,
     cov_cols,

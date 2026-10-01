@@ -1,11 +1,10 @@
 #' Expand a matched comparison data frame
 #'
-#' Expand the data frame output by [matched_comparison()] using the `include` column, so that row i is included `include[i]` times.
 #' @name expand_matched_df
-#' @param matched_df A data frame output by [matched_comparison()]. This should contain columns for `arm_col`, all elements of `cov_cols` and `include`. It can also contain other columns.
-#' @return `expand_matched_df` returns a data frame (more detail here, including the columns!).
+#' @param matched_df A data frame output by [matched_sample()]. This should contain columns for `arm_col`, all elements of `cov_cols` and `include`. It can also contain other columns.
+#' @return `expand_matched_df` returns a data frame with all the columns of `matched_df` except include. Each row (row `i`) is now included `include[i]` times. That is, rows with `matched_df$include[i]==0` are omitted from the returned data frame, and rows with `matched_df$include[i] > 1` are included multiple times.
 #' @export
-#' @seealso [matched_comparison()]
+#' @seealso [matched_sample()]
 #'
 #' @examples
 #' ## First use `propscore_df` to create a propensity score data frame
@@ -26,7 +25,7 @@
 #' ## and do not drop any intervention cases for which there are no
 #' ## comparison cases to sample
 #'
-#' match_j_exp300_replace = matched_comparison(
+#' match_j_exp300_replace = matched_sample(
 #'    df = eg_data,
 #'    propscore_df = eg_j_exp300,
 #'    cov_cols = c("category", "risk_ass", "sus_age_bin"),

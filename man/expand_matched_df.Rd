@@ -7,13 +7,13 @@
 expand_matched_df(matched_df)
 }
 \arguments{
-\item{matched_df}{A data frame output by \code{\link[=matched_comparison]{matched_comparison()}}. This should contain columns for \code{arm_col}, all elements of \code{cov_cols} and \code{include}. It can also contain other columns.}
+\item{matched_df}{A data frame output by \code{\link[=matched_sample]{matched_sample()}}. This should contain columns for \code{arm_col}, all elements of \code{cov_cols} and \code{include}. It can also contain other columns.}
 }
 \value{
-\code{expand_matched_df} returns a data frame (more detail here, including the columns!).
+\code{expand_matched_df} returns a data frame with all the columns of \code{matched_df} except include. Each row (row \code{i}) is now included \code{include[i]} times. That is, rows with \code{matched_df$include[i]==0} are omitted from the returned data frame, and rows with \code{matched_df$include[i] > 1} are included multiple times.
 }
 \description{
-Expand the data frame output by \code{\link[=matched_comparison]{matched_comparison()}} using the \code{include} column, so that row i is included \code{include[i]} times.
+Expand a matched comparison data frame
 }
 \examples{
 ## First use `propscore_df` to create a propensity score data frame
@@ -34,7 +34,7 @@ eg_j_exp300 = propscore_df(
 ## and do not drop any intervention cases for which there are no
 ## comparison cases to sample
 
-match_j_exp300_replace = matched_comparison(
+match_j_exp300_replace = matched_sample(
    df = eg_data,
    propscore_df = eg_j_exp300,
    cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -53,5 +53,5 @@ match_j_exp300_replace |> expand_matched_df()
 
 }
 \seealso{
-\code{\link[=matched_comparison]{matched_comparison()}}
+\code{\link[=matched_sample]{matched_sample()}}
 }

@@ -1,7 +1,7 @@
 # With replacement, not dropping
 
     Code
-      matched_comparison(df = eg_data, propscore_df = eg_mix_exp100, cov_cols = c(
+      matched_sample(df = eg_data, propscore_df = eg_mix_exp100, cov_cols = c(
         "category", "risk_ass", "sus_age_bin"), arm_col = "Arm", intervention_level = "Intervention",
       seed = 20, replace = T, downsample = F, drop_int = F)
     Message
@@ -32,7 +32,7 @@
 ---
 
     Code
-      matched_comparison(df = eg_data, propscore_df = eg_m_resc15, cov_cols = c(
+      matched_sample(df = eg_data, propscore_df = eg_m_resc15, cov_cols = c(
         "category", "risk_ass", "sus_age_bin"), arm_col = "Arm", intervention_level = "Intervention",
       seed = 20, replace = T, downsample = F, drop_int = F)
     Message
@@ -64,7 +64,7 @@
 # downsampling, dropping
 
     Code
-      matched_comparison(df = eg_data, propscore_df = eg_m_resc15, cov_cols = c(
+      matched_sample(df = eg_data, propscore_df = eg_m_resc15, cov_cols = c(
         "category", "risk_ass", "sus_age_bin"), arm_col = "Arm", intervention_level = "Intervention",
       seed = 20, replace = F, downsample = T, drop_int = T)
     Message

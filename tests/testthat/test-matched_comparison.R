@@ -1,4 +1,4 @@
-## Tests for matched_comparison
+## Tests for matched_sample
 
 ## Do one with replace adn downsample both TRUE
 ## One with replace and downsample both FALSE
@@ -34,7 +34,7 @@ eg_mix_exp100 = propscore_df(
 ## Check it can't handle both true or both false
 
 expect_error(
-  matched_comparison(
+  matched_sample(
     df = eg_data,
     propscore_df = eg_j_est1,
     cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -48,7 +48,7 @@ expect_error(
 )
 
 expect_error(
-  matched_comparison(
+  matched_sample(
     df = eg_data,
     propscore_df = eg_j_est1,
     cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -64,7 +64,7 @@ expect_error(
 
 test_that("With replacement, not dropping", {
   expect_snapshot(
-    matched_comparison(
+    matched_sample(
       df = eg_data,
       propscore_df = eg_mix_exp100,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -80,7 +80,7 @@ test_that("With replacement, not dropping", {
 
 test_that("With replacement, not dropping", {
   expect_snapshot(
-    matched_comparison(
+    matched_sample(
       df = eg_data,
       propscore_df = eg_m_resc15,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
@@ -96,7 +96,7 @@ test_that("With replacement, not dropping", {
 
 test_that("downsampling, dropping", {
   expect_snapshot(
-    matched_comparison(
+    matched_sample(
       df = eg_data,
       propscore_df = eg_m_resc15,
       cov_cols = c("category", "risk_ass", "sus_age_bin"),
